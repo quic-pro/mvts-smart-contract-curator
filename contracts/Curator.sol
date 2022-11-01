@@ -11,9 +11,9 @@ contract Curator is Ownable {
     // ----- CUSTOM TYPES ------------------------------------------------------
     
     struct Router {
+        uint128 ttl;
         uint128 chainId;
         string adr;
-        uint128 poolCodeLength;
     }
     
     
@@ -26,11 +26,11 @@ contract Curator is Ownable {
     
     // ----- SMART CONTRACT MANAGEMENT ------------------------------------------
 
-    function setRootRouter(uint128 chainId, string memory adr, uint128 poolCodeLength) external onlyOwner {
-        rootRouter = Router(chainId, adr, poolCodeLength);
+    function setRootRouter(uint128 ttl, uint128 chainId, string memory adr) external onlyOwner {
+        rootRouter = Router(ttl, chainId, adr);
     }
     
-    function removeRootRouter() external onlyOwner {
-        rootRouter = Router(0, "", 0);
+    function cleanRootRouter() external onlyOwner {
+        rootRouter = Router(0, 0, "");
     }
 }
