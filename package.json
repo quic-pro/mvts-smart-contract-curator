@@ -1,6 +1,6 @@
 {
   "name": "mvts-smart-contract-curator",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Smart contract for storing the address of the root router.",
   "scripts": {
     "test": "truffle test",
