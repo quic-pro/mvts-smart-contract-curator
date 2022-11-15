@@ -12,32 +12,42 @@ contract Curator is Ownable {
     struct RootRouter {
         string chainId;
         string adr;
-        string ttl;
     }
+
+
+
+    // ----- SETTINGS --------------------------------------------------------------------------------------------------
+
+    string constant public POOL_CODE_LENGTH = "3";
+
+    string public ttl = "864000"; // 10 days
 
 
 
     // ----- DATA ------------------------------------------------------------------------------------------------------
 
     RootRouter public rootRouter;
-    bool public isRootRouterConfigured;
+    bool public hasRootRouter;
 
 
 
     // ----- SMART CONTRACT MANAGEMENT ---------------------------------------------------------------------------------
 
-    function setRootRouter(uint256 newChainId, string memory newAddress, uint256 newTtl) external onlyOwner {
+    function setTtl(uint256 newTtl) external onlyOwner {
+        ttl = Strings.toString(newTtl);
+    }
+
+    function setRootRouter(uint256 newChainId, string memory newAddress) external onlyOwner {
         rootRouter = RootRouter(
             Strings.toString(newChainId),
-            newAddress,
-            Strings.toString(newTtl)
+                newAddress
         );
-        isRootRouterConfigured = true;
+        hasRootRouter = true;
     }
 
     function cleanRootRouter() external onlyOwner {
         delete rootRouter;
-        isRootRouterConfigured = false;
+        hasRootRouter = false;
     }
 
 
@@ -45,22 +55,12 @@ contract Curator is Ownable {
     // ----- ROUTING ---------------------------------------------------------------------------------------------------
 
     function getRootRouter() public view returns(string[5] memory) {
-        if (!isRootRouterConfigured) {
-            return [
-                "400", // Response code
-                "", // Ignore
-                "", // Ignore
-                "", // Ignore
-                "" // Ignore
-            ];
-        }
-
         return [
-            "200", // Response code
-            "3", // Pool code length
+            (hasRootRouter ? "200" : "400"), // Response code
+            POOL_CODE_LENGTH,
             rootRouter.chainId,
             rootRouter.adr,
-            rootRouter.ttl
+            ttl
         ];
     }
 }
