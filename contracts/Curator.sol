@@ -20,7 +20,7 @@ contract Curator is Ownable {
 
     string constant public POOL_CODE_LENGTH = "3";
 
-    string public ttl = "864000"; // 10 days
+    uint256 public ttl = 10 days;
 
 
 
@@ -34,14 +34,11 @@ contract Curator is Ownable {
     // ----- SMART CONTRACT MANAGEMENT ---------------------------------------------------------------------------------
 
     function setTtl(uint256 newTtl) external onlyOwner {
-        ttl = Strings.toString(newTtl);
+        ttl = newTtl;
     }
 
-    function setRootRouter(uint256 newChainId, string memory newAddress) external onlyOwner {
-        rootRouter = RootRouter(
-            Strings.toString(newChainId),
-                newAddress
-        );
+    function setRootRouter(uint256 newChainId, string memory newAdr) external onlyOwner {
+        rootRouter = RootRouter(Strings.toString(newChainId), newAdr);
         hasRootRouter = true;
     }
 
@@ -60,7 +57,7 @@ contract Curator is Ownable {
             POOL_CODE_LENGTH,
             rootRouter.chainId,
             rootRouter.adr,
-            ttl
+            Strings.toString(ttl)
         ];
     }
 }
