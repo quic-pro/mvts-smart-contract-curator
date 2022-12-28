@@ -9,16 +9,25 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 contract Curator is Ownable {
     // ----- CUSTOM TYPES ----------------------------------------------------------------------------------------------
 
-    struct RootRouter {
-        string chainId;
+    enum CodeMode {Number, Pool}
+
+    struct Router {
+        uint256 chainId;
+        uint256 poolCodeLength;
         string adr;
+    }
+
+    struct NodeData {
+        uint256 responseCode;
+        uint256 ttl;
+        CodeMode mode;
+        string sipUri;
+        Router router;
     }
 
 
 
     // ----- SETTINGS --------------------------------------------------------------------------------------------------
-
-    string constant public POOL_CODE_LENGTH = "3";
 
     uint256 public ttl = 10 days;
 
@@ -26,7 +35,9 @@ contract Curator is Ownable {
 
     // ----- DATA ------------------------------------------------------------------------------------------------------
 
-    RootRouter public rootRouter;
+    uint256 constant private _POOL_CODE_LENGTH = 3;
+
+    Router public rootRouter;
     bool public hasRootRouter;
 
 
@@ -38,7 +49,7 @@ contract Curator is Ownable {
     }
 
     function setRootRouter(uint256 newChainId, string memory newAdr) external onlyOwner {
-        rootRouter = RootRouter(Strings.toString(newChainId), newAdr);
+        rootRouter = Router(newChainId, _POOL_CODE_LENGTH, newAdr);
         hasRootRouter = true;
     }
 
@@ -51,13 +62,13 @@ contract Curator is Ownable {
 
     // ----- ROUTING ---------------------------------------------------------------------------------------------------
 
-    function getRootRouter() public view returns(string[5] memory) {
-        return [
-            (hasRootRouter ? "200" : "400"), // Response code
-            POOL_CODE_LENGTH,
-            rootRouter.chainId,
-            rootRouter.adr,
-            Strings.toString(ttl)
-        ];
+    function getRootRouter() public view returns(NodeData memory) {
+        return NodeData(
+            (hasRootRouter ? 200 : 400), // Response code
+            ttl,
+            CodeMode.Pool,
+            "", // sipUri
+            rootRouter
+        );
     }
 }
