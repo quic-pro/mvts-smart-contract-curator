@@ -54,17 +54,17 @@ contract Curator is Ownable {
         delete rootRouter;
         hasRootRouter = false;
     }
-    
+
 
     // ----- ROUTING ---------------------------------------------------------------------------------------------------
 
     function getRootRouter() public view returns(NodeData memory) {
-        return NodeData(
-            (hasRootRouter ? 200 : 400), // Response code
-            ttl,
-            CodeMode.Pool,
-            "", // sipUri
-            rootRouter
-        );
+        return NodeData({
+            responseCode: (hasRootRouter ? 200 : 400),
+            ttl: ttl,
+            mode: CodeMode.Pool,
+            sipUri: "",
+            router: rootRouter
+        });
     }
 }
