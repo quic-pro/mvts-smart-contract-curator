@@ -26,11 +26,9 @@ contract Curator is Ownable {
     }
 
 
-
     // ----- SETTINGS --------------------------------------------------------------------------------------------------
 
     uint256 public ttl = 10 days;
-
 
 
     // ----- DATA ------------------------------------------------------------------------------------------------------
@@ -39,7 +37,6 @@ contract Curator is Ownable {
 
     Router public rootRouter;
     bool public hasRootRouter;
-
 
 
     // ----- SMART CONTRACT MANAGEMENT ---------------------------------------------------------------------------------
@@ -57,8 +54,7 @@ contract Curator is Ownable {
         delete rootRouter;
         hasRootRouter = false;
     }
-
-
+    
 
     // ----- ROUTING ---------------------------------------------------------------------------------------------------
 
